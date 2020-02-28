@@ -1,4 +1,6 @@
 import java.util.Scanner;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MotherShip
 {
@@ -103,6 +105,14 @@ public class MotherShip
             Mothership.setMoney(Mothership.getMoney() + (Fleet[NextInput].getCost() / 2));
             Fleet[NextInput] = null;
             System.out.println("!! Ship Removed !!");
+
+            List<Ships> values = new ArrayList<Ships>();
+            for(Ships data: Fleet) {
+                if(data != null) {
+                    values.add(data);
+                }
+            }
+            Fleet = values.toArray(new Ships[values.size()]);
         }
 
         if(Input == 2)
