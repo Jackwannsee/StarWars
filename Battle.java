@@ -6,26 +6,36 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 
 
-public class Battle
-{
+public class Battle {
     Scanner in = new Scanner(System.in);
     private static DecimalFormat df2 = new DecimalFormat("#.##");
 
-    boolean Game = true;
     int BattleNumber = 1;   //Starts at 1 otherwise it looks weird if it is 0
     double PlayerDamage;
-    Double RandomChance;
+    double EnemyDamage;
+    double Random;
 
-    public Battle(Ships Player) throws InterruptedException
-    {
-        if(Player.getHP() > 0) {
-            double TempHP = Player.getHP() * (Math.random() * 1.1) + 0.9;
-            double TempArmor = Player.getArmorPoints() * (Math.random() * 1.1) + 0.9;
-            double TempDamage = Player.getDamage() * (Math.random() * 1.1) + 0.9;
+    public Battle(Ships Player, MotherShip MotherShip) throws InterruptedException {
+        if (Player.getHP() > 0) {
+            double OriginalHP = Player.getHP();
+            double OriginalArmor = Player.getArmorPoints();
+
+            Random = (Math.random() * (1.05 - 0.6)) + 0.6;
+            double TempHP = Player.getHP() * Random;
+
+            Random = (Math.random() * (1.05 - 0.7)) + 0.7;
+            double TempArmor = Player.getArmorPoints() * Random;
+
+            Random = (Math.random() * (1.05 - 0.7)) + 0.7;
+            double TempDamage = Player.getDamage() * Random;
+
             Ships TempEnemy = new Ships(TempHP, TempArmor, TempDamage);
 
             System.out.println();
+            System.out.println("Rules: \n1) DIE = Lose Ship      \n2) Both Die = Restore Ship");
             System.out.println("Note:   Player Damage Varies");
+            System.out.println();
+
             while (TempEnemy.getHP() >= 0 && Player.getHP() >= 0) {
                 System.out.println("-=-=-=-=-=-=-=-=-= Battle " + BattleNumber + " =-=-=-=-=-=-=-=-=-");
 
@@ -39,30 +49,38 @@ public class Battle
                 System.out.print("                      ");
                 in.nextLine();
 
-                RandomChance = Math.random();
-                PlayerDamage = Player.getDamage() * (BattleNumber * 0.5) * RandomChance;
-                if (TempEnemy.getArmorPoints() <= 0) {
+                PlayerDamage = Player.getDamage() + BattleNumber * (int) (Math.random() * 100 + 1);
+                if (TempEnemy.getArmorPoints() > 0) {
+                    TempEnemy.setArmorPoints(TempEnemy.getArmorPoints() - PlayerDamage * 0.75);
+                    TempEnemy.setHP(TempEnemy.getHP() - PlayerDamage * 0.25);
+
+                    if (TempEnemy.getArmorPoints() < 0) {
+                        TempEnemy.setHP(TempEnemy.getHP() + TempEnemy.getArmorPoints());
+                        TempEnemy.setArmorPoints(0);
+                    }
+                }
+                else {
                     TempEnemy.setHP(TempEnemy.getHP() - PlayerDamage);
-                } else {
-                    TempEnemy.setHP(TempEnemy.getHP() - PlayerDamage * 0.75);
-                    TempEnemy.setArmorPoints(TempEnemy.getArmorPoints() - PlayerDamage * 0.25);
                 }
 
-                RandomChance = Math.random();
-                PlayerDamage = 0;
-                PlayerDamage = TempEnemy.getDamage() * (BattleNumber * 0.5) * RandomChance;
-                if (Player.getArmorPoints() <= 0) {
-                    Player.setHP(Player.getHP() - PlayerDamage);
-                } else {
-                    Player.setHP(Player.getHP() - PlayerDamage * 0.75);
-                    Player.setArmorPoints(Player.getArmorPoints() - PlayerDamage * 0.25);
+                EnemyDamage = TempEnemy.getDamage() + BattleNumber * (int) (Math.random() * 100 + 1);
+                if (Player.getArmorPoints() > 0) {
+                    Player.setArmorPoints(Player.getArmorPoints() - PlayerDamage * 0.75);
+                    Player.setHP(Player.getHP() - PlayerDamage * 0.25);
+
+                    if (Player.getArmorPoints() < 0) {
+                        Player.setHP(Player.getHP() + Player.getArmorPoints());
+                        Player.setArmorPoints(0);
+                    }
+                }
+                else {
+                    Player.setHP(Player.getHP() - EnemyDamage);
                 }
 
                 BattleNumber = BattleNumber + 1;
             }
 
-            if (Player.getHP() <= 0 && TempEnemy.getHP() < 0)
-            {
+            if (Player.getHP() <= 0 && TempEnemy.getHP() < 0) {
                 System.out.println();
                 System.out.println("You have both died");
                 System.out.println();
@@ -71,6 +89,9 @@ public class Battle
                 Thread.sleep(1000);
                 System.out.println("Clap");
                 Thread.sleep(2000);
+
+                Player.setHP(OriginalHP);
+                Player.setArmorPoints(OriginalArmor);
             }
 
             else if (Player.getHP() <= 0)
@@ -78,6 +99,7 @@ public class Battle
                 System.out.println();
                 System.out.println("Your Ship got demolished in battle");
                 System.out.println("Enemy HP: " + df2.format(TempEnemy.getHP()));
+                Player.setLosses(Player.getLosses() + 1);
                 Thread.sleep(2000);
             }
 
@@ -86,6 +108,9 @@ public class Battle
                 System.out.println();
                 System.out.println("You have demolished the Enemy");
                 System.out.println("Your HP: " + df2.format(Player.getHP()));
+                System.out.println("You have gained 2000$");
+                MotherShip.setMoney(MotherShip.getMoney() + 2000);
+                Player.setWins(Player.getWins() + 1);
                 Thread.sleep(2000);
             }
         }
