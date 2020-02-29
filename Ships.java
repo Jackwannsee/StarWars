@@ -12,15 +12,8 @@ public class Ships
     private double ArmorPoints;
     private double Damage;
     private int Cost;
-    private Ships[] ShipShop = new Ships[100];
-
-    Ships(String _Name)
-    {
-        Name = _Name;
-        HP = (int)(Math.random()*2000)+ 1300;
-        ArmorPoints = (int)(Math.random()*750) + 250;
-        Damage = 250;
-    }
+    private int Wins;
+    private int Losses;
 
     Ships(String _Name, double _HP, double _ArmorPoints, int _Cost, double _Damage)
     {
@@ -29,6 +22,9 @@ public class Ships
         ArmorPoints = _ArmorPoints;
         Cost = _Cost;
         Damage = _Damage;
+
+        Wins = 0;
+        Losses = 0;
     }
 
     Ships(double _HP, double _ArmorPoints, double _Damage)
@@ -43,7 +39,7 @@ public class Ships
     }
 
     void Information() {
-        System.out.println(" *  " + Name + "  *  HP: " + df2.format(HP) + "  *  Armor: " + df2.format(ArmorPoints)+ "  *  Attack: " + Damage);
+        System.out.println(" *  " + Name + "  *  HP: " + df2.format(HP) + "  *  Armor: " + df2.format(ArmorPoints)+ "  *  Attack: " + df2.format(Damage));
     }
 
     void InformationCost() {
@@ -88,5 +84,21 @@ public class Ships
 
     public void setDamage(double damage) {
         Damage = damage;
+    }
+
+    public int getWins() {
+        return Wins;
+    }
+
+    public void setWins(int wins) {
+        Wins = wins;
+    }
+
+    public int getLosses() {
+        return Losses;
+    }
+
+    public void setLosses(int losses) {
+        Losses = losses;
     }
 }
