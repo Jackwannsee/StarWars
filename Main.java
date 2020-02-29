@@ -59,7 +59,8 @@ public class Main
                 int Limit = YourMotherShip.NumberOfShips();
                 YourMotherShip.ListShips();
                 System.out.print("\n Chose your ship: ");
-                while (!in.hasNextInt() || in.nextInt() > Limit || in.nextInt() <= 0)
+
+                while (!in.hasNextInt() || in.nextInt() > Limit)
                 {
                     System.out.print("        --> ");
                     in.nextLine();
@@ -67,7 +68,7 @@ public class Main
                 int InputShip = in.nextInt();
 
                 YourMotherShip.GetShip(InputShip);
-                new Battle(YourMotherShip.GetShip(0));
+                new Battle(YourMotherShip.GetShip(0), YourMotherShip);
             }
 
             if (Input == 2)
