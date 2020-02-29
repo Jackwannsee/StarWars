@@ -68,8 +68,7 @@ public class MotherShip
         System.out.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
     }
 
-    void AdjustShips(MotherShip Mothership)
-    {
+    void AdjustShips(MotherShip Mothership) throws InterruptedException {
         System.out.println("");
         System.out.println("");
         System.out.println("-=-=-=-= Ships/ Details =-=-=-=-");
@@ -136,8 +135,37 @@ public class MotherShip
             System.out.println("Money: " + Mothership.getMoney());
             System.out.println("Wins: " + Mothership.getWins());
             System.out.println("Losses: " + Mothership.getLosses());
-            System.out.print("# of Ships: " + Mothership.NumberOfShips());
+            System.out.println("# of Ships: " + Mothership.NumberOfShips());
+            System.out.println("# of Wins: " + NumberOfWins());
+            System.out.println(("# of Losses: " + NumberOfLosses()));
+            Thread.sleep(1500);
         }
+    }
+
+    int NumberOfLosses()
+    {
+        int NumberLosses = 0;
+        for (int i = 0; i < Fleet.length; i++)
+        {
+            if(Fleet[i] != null)
+            {
+                NumberLosses = NumberLosses + Fleet[i].getLosses();
+            }
+        }
+        return NumberLosses;
+    }
+
+    int NumberOfWins()
+    {
+        int NumberWins = 0;
+        for (int i = 0; i < Fleet.length; i++)
+        {
+            if(Fleet[i] != null)
+            {
+                NumberWins = NumberWins + Fleet[i].getWins();
+            }
+        }
+        return NumberWins;
     }
 
     int NumberOfShips()
@@ -218,6 +246,11 @@ public class MotherShip
                 break;
             }
         }
+    }
+    
+    void RemoveShip(Ships S1)
+    {
+        
     }
 
     Ships GetShip(int X)
