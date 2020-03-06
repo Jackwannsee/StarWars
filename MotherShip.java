@@ -12,26 +12,6 @@ public class MotherShip
     private int Losses = 0;
     private Ships[] Fleet = new Ships[100];
 
-    Ships[] ShipShop = new Ships[16];
-    {
-        ShipShop[0] = new Ships("Battle Droid", 1400, 500, 1500,250);
-        ShipShop[1] = new Ships("Star Fighter", 1500, 550, 1550,250);
-        ShipShop[2] = new Ships("Star Blaster", 1600, 600, 1600,250);
-        ShipShop[3] = new Ships("Alpha Blaster", 1700, 650, 1700,300);
-        ShipShop[4] = new Ships("Beta Blaster", 1800, 700, 1800,300);
-        ShipShop[5] = new Ships("Gamma Blaster", 1900, 750, 1900,300);
-        ShipShop[6] = new Ships("Trojan", 1950, 800, 1950,350);
-        ShipShop[7] = new Ships("Karkinos", 2000, 850, 2000,350);
-        ShipShop[8] = new Ships("Inferno", 2050, 900, 2050,350);
-        ShipShop[9] = new Ships("LightSpeed", 2100, 950, 2100,400);
-        ShipShop[10] = new Ships("Project X", 2150, 1000, 2150,400);
-        ShipShop[11] = new Ships("Purge", 2200, 1050, 22001,450);
-        ShipShop[12] = new Ships("Herculues", 2250, 1100, 2250,450);
-        ShipShop[13] = new Ships("Hippocrates", 2300, 1200, 2300,500);
-        ShipShop[14] = new Ships("Atomic Blaster", 2500, 1500, 2500,550);
-        ShipShop[15] = new Ships("Taco God", 5000, 3000, 10000,700);
-    }
-
     MotherShip()
     {
         Name = "Death Star";
@@ -62,13 +42,12 @@ public class MotherShip
         }
         if(Ships == false)
         {
-            System.out.println();
             System.out.println("You have 0 Ships go buy some");
         }
         System.out.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
     }
 
-    void AdjustShips(MotherShip Mothership) throws InterruptedException {
+    void AdjustShips (MotherShip Mothership) throws InterruptedException {
         System.out.println("");
         System.out.println("");
         System.out.println("-=-=-=-= Ships/ Details =-=-=-=-");
@@ -87,8 +66,6 @@ public class MotherShip
 
         if(Input == 1)
         {
-            Ships[] TEMPFleet = new Ships[100];
-
             Mothership.ListShips();
             System.out.println("This will give you about 50% of what you paid");
             System.out.print("# of ship to REMOVE --> ");
@@ -117,16 +94,39 @@ public class MotherShip
         if(Input == 2)
         {
             Mothership.ListShips();
+
             System.out.println();
-            System.out.println("This will cost you 100$ to ");
+            System.out.println("This will cost you 500$ to upgrade your ship by 25%");
             System.out.print("# of ship to UPGRADE --> ");
 
-            while (!in.hasNextInt())
-            {
-                System.out.print("  --> ");
-                in.nextLine();
+            int Limit = Mothership.NumberOfShips() + 1;
+            boolean ShipsNotSelected = true;
+            int InputShip = 0;
+
+            while (ShipsNotSelected) {
+                System.out.print("\n Chose your ship: ");
+
+                while (!in.hasNextInt()) {
+                    System.out.print("\n Chose your ship: ");
+                    in = new Scanner(System.in);
+                }
+                InputShip = in.nextInt();
+
+                if (InputShip > 0 && InputShip < Limit) {
+                    ShipsNotSelected = false;
+                }
             }
-            int NextInput = in.nextInt();
+            InputShip = InputShip - 1;
+
+            Fleet[InputShip].setHP(Fleet[InputShip].getHP() * 1.25);
+            Fleet[InputShip].setArmorPoints(Fleet[InputShip].getArmorPoints() * 1.25);
+            Fleet[InputShip].setDamage(Fleet[InputShip].getDamage() * 1.25);
+
+            System.out.println();
+            System.out.print("New Stats ");
+            Fleet[InputShip].Information();
+            Mothership.setMoney(Mothership.getMoney() - 500);
+            Thread.sleep(1000);
         }
         if(Input == 3)
         {
@@ -179,6 +179,43 @@ public class MotherShip
             }
         }
         return NumberOfShips;
+    }
+
+    void AddShip(Ships S1)
+    {
+        for (int i = 0; i < Fleet.length; i++)
+        {
+            if(Fleet[i] == null)
+            {
+                Fleet[i] = S1;
+                break;
+            }
+        }
+    }
+
+    void RemoveShip(int NumberOfShip)
+    {
+        Fleet[NumberOfShip] = null;
+    }
+
+    Ships[] ShipShop = new Ships[16];
+    {
+        ShipShop[0] = new Ships("Battle Droid", 1400, 500, 1500,250);
+        ShipShop[1] = new Ships("Star Fighter", 1500, 550, 1550,250);
+        ShipShop[2] = new Ships("Star Blaster", 1600, 600, 1600,250);
+        ShipShop[3] = new Ships("Alpha Blaster", 1700, 650, 1700,300);
+        ShipShop[4] = new Ships("Beta Blaster", 1800, 700, 1800,300);
+        ShipShop[5] = new Ships("Gamma Blaster", 1900, 750, 1900,300);
+        ShipShop[6] = new Ships("Trojan", 1950, 800, 1950,350);
+        ShipShop[7] = new Ships("Karkinos", 2000, 850, 2000,350);
+        ShipShop[8] = new Ships("Inferno", 2050, 900, 2050,350);
+        ShipShop[9] = new Ships("LightSpeed", 2100, 950, 2100,400);
+        ShipShop[10] = new Ships("Project X", 2150, 1000, 2150,400);
+        ShipShop[11] = new Ships("Purge", 2200, 1050, 22001,450);
+        ShipShop[12] = new Ships("Herculues", 2250, 1100, 2250,450);
+        ShipShop[13] = new Ships("Hippocrates", 2300, 1200, 2300,500);
+        ShipShop[14] = new Ships("Atomic Blaster", 2500, 1500, 2500,550);
+        ShipShop[15] = new Ships("Taco God", 5000, 3000, 10000,700);
     }
 
     void BuyShip(MotherShip MotherShip)
@@ -234,23 +271,6 @@ public class MotherShip
             MotherShip.setMoney(MotherShip.getMoney() - ShipShop[BuyInput].getCost());
             System.out.println("                Money: " + MotherShip.getMoney());
         }
-    }
-
-    void AddShip(Ships S1)
-    {
-        for (int i = 0; i < Fleet.length; i++)
-        {
-            if(Fleet[i] == null)
-            {
-                Fleet[i] = S1;
-                break;
-            }
-        }
-    }
-    
-    void RemoveShip(Ships S1)
-    {
-        
     }
 
     Ships GetShip(int X)
