@@ -1,108 +1,86 @@
-import static java.lang.Thread.currentThread;
-import java.util.concurrent.TimeUnit;
 import java.util.Scanner;
 
 public class Main
 {
-    public static void main(String[] args)throws InterruptedException{
+    public static void main(String[] args)throws InterruptedException {
         Scanner in = new Scanner(System.in);
 
-        MotherShip FleetMain = new MotherShip();
-        //FleetMain.AddShip(ShipShop[0]);
-
         MotherShip YourMotherShip = new MotherShip();
+        Notifications Notification = new Notifications();
 
-        YourMotherShip.AddShip(new Ships("Battle Droid", 1400, 500, 1500,250));
+        YourMotherShip.AddShip(new Ships("Battle Droid", 1400, 500, 1500, 250));
 
         boolean Game = true;
-        int Input =0;
-        while(Game)
+        while (Game)
         {
-            System.out.println("");
-            System.out.println("");
-            System.out.println("!! Welcome Young Padawan !!");
-            System.out.println("1. Lets Fight");
-            System.out.println("2. Buy a Ship");
-            System.out.println("3. Your fleet");
-            System.out.println("4. Ships/ Details");
-            System.out.println("5. End Game");
-            System.out.print("--> ");
+            Notification.ErrorMain();
 
             int Wronginput = 0;
-            while (!in.hasNextInt())
-            {
+            while (!in.hasNextInt()) {
                 Wronginput = Wronginput + 1;
                 if (Wronginput % 3 == 0) {
-                }
-                else {
+                } else {
                     System.out.print("--> ");
                 }
-
                 in.next();      //in.next() resets the input so that it doesn't go into an infinite loop
 
                 if (Wronginput % 3 == 0) {
-                    System.out.println("");
-                    System.out.println("");
-                    System.out.println("1. Lets Fight");
-                    System.out.println("2. Buy a Ship");
-                    System.out.println("3. Your fleet");
-                    System.out.println("4. Ships/ Details");
-                    System.out.println("5. End Game");
-                    System.out.print("--> ");
+                    Notification.ErrorMain();
                 }
             }
-            Input = in.nextInt();
+            int Input = in.nextInt();
             in.nextLine();
 
-            if (Input == 1)
-            {
-                int Limit = YourMotherShip.NumberOfShips();
-                YourMotherShip.ListShips();
-                System.out.print("\n Chose your ship: ");
+            if (Input == 1) {
+                if (YourMotherShip.NumberOfShips() > 0) {
+                    int Limit = YourMotherShip.NumberOfShips() + 1;
+                    int InputShip = 0;
+                    YourMotherShip.ListShips();
 
-                while (!in.hasNextInt() || in.nextInt() > Limit)
-                {
-                    System.out.print("        --> ");
-                    in.nextLine();
+                    boolean ShipsNotSelected = true;
+                    while (ShipsNotSelected) {
+                        System.out.print("\n Chose your ship: ");
+
+                        while (!in.hasNextInt()) {
+                            System.out.print("\n Chose your ship: ");
+                            in = new Scanner(System.in);
+                        }
+                        InputShip = in.nextInt();
+
+                        if (InputShip > 0 && InputShip < Limit) {
+                            ShipsNotSelected = false;
+                        }
+                    }
+                    InputShip = InputShip - 1;
+
+                    YourMotherShip.GetShip(InputShip);
+                    new Battle(YourMotherShip.GetShip(0), YourMotherShip, InputShip);
                 }
-                int InputShip = in.nextInt();
-
-                YourMotherShip.GetShip(InputShip);
-                new Battle(YourMotherShip.GetShip(0), YourMotherShip);
+                if (YourMotherShip.NumberOfShips() <= 0) {
+                    System.out.println();
+                    System.out.println();
+                    System.out.println("You have no Ships go buy some");
+                }
             }
 
             if (Input == 2)
             {
-                Pause();
+                Notification.MainPause();
                 YourMotherShip.BuyShip(YourMotherShip);
             }
 
-            if (Input == 3)
-            {
+            if (Input == 3) {
                 YourMotherShip.ListShips();
+                Thread.sleep(500);
             }
 
-            if (Input == 4)
-            {
+            if (Input == 4) {
                 YourMotherShip.AdjustShips(YourMotherShip);
             }
 
-            if (Input == 5)
-            {
+            if (Input == 5) {
                 Game = false;
             }
         }
-    }
-
-    //function to pause program
-    private static void Pause() throws InterruptedException     //The Throws interrupted Exception is just there for the time otherwise there is a error
-    {
-        System.out.println();
-        System.out.print("Loading");
-        Thread.sleep(500);
-        System.out.print("...");
-        Thread.sleep(500);
-        System.out.print("...");
-        Thread.sleep(750);
     }
 }
