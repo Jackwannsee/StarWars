@@ -1,5 +1,4 @@
 import java.util.Scanner;
-import java.math.RoundingMode;
 import java.text.DecimalFormat;
 
 public class Ships
