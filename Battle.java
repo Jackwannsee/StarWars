@@ -1,8 +1,4 @@
-import java.time.Period;
 import java.util.Scanner;
-import static java.lang.Thread.currentThread;
-import java.util.concurrent.TimeUnit;
-import java.math.RoundingMode;
 import java.text.DecimalFormat;
 
 
@@ -15,7 +11,10 @@ public class Battle {
     double EnemyDamage;
     double Random;
 
-    public Battle(Ships Player, MotherShip MotherShip) throws InterruptedException {
+    Notifications Notification = new Notifications();
+
+    public Battle(Ships Player, MotherShip MotherShip, int NumberOfShip) throws InterruptedException
+    {
         if (Player.getHP() > 0) {
             double OriginalHP = Player.getHP();
             double OriginalArmor = Player.getArmorPoints();
@@ -23,10 +22,10 @@ public class Battle {
             Random = (Math.random() * (1.05 - 0.6)) + 0.6;
             double TempHP = Player.getHP() * Random;
 
-            Random = (Math.random() * (1.05 - 0.7)) + 0.7;
+            Random = (Math.random() * (1.05 - 0.6)) + 0.6;
             double TempArmor = Player.getArmorPoints() * Random;
 
-            Random = (Math.random() * (1.05 - 0.7)) + 0.7;
+            Random = (Math.random() * (1.05 - 0.65)) + 0.65;
             double TempDamage = Player.getDamage() * Random;
 
             Ships TempEnemy = new Ships(TempHP, TempArmor, TempDamage);
@@ -97,9 +96,10 @@ public class Battle {
             else if (Player.getHP() <= 0)
             {
                 System.out.println();
-                System.out.println("Your Ship got demolished in battle");
+                System.out.println("Your Ship got demolished in battle ... your ship has been removed");
                 System.out.println("Enemy HP: " + df2.format(TempEnemy.getHP()));
                 Player.setLosses(Player.getLosses() + 1);
+                MotherShip.RemoveShip(NumberOfShip);
                 Thread.sleep(2000);
             }
 
@@ -111,7 +111,7 @@ public class Battle {
                 System.out.println("You have gained 2000$");
                 MotherShip.setMoney(MotherShip.getMoney() + 2000);
                 Player.setWins(Player.getWins() + 1);
-                Thread.sleep(2000);
+                Thread.sleep(1700);
             }
         }
         else
